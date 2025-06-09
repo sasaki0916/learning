@@ -1,0 +1,46 @@
+name: Simple Python CI
+
+# トリガー: main/masterブランチへのpushとPR
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Test Python Application
+    runs-on: ubuntu-latest
+    
+    steps:
+    # コードをチェックアウト
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    # Python 3.10をセットアップ
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    # 依存関係をインストール
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    # テストを実行
+    - name: Run tests
+      run: |
+        pytest tests/ -v
+    
+    # アプリケーションを実行
+    - name: Run application
+      run: |
+        python src/app.py
+    
+    # 成功メッセージ
+    - name: Success notification
+      run: |
+        echo "🎉 All tests passed!"
+        echo "🚀 Ready for deployment to AWS"
